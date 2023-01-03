@@ -6,6 +6,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.drive.RobotDriveBase.MotorType;
 import edu.wpi.first.wpilibj.motorcontrol.Talon;
@@ -19,6 +20,8 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -29,10 +32,10 @@ import frc.robot.utils.Limelight;
 public class SwerveModule{
 
     private final WPI_TalonFX driveMotor;
-    private final Talon turningMotor;
+    private final WPI_TalonFX turningMotor;
 
-    private final Talon driveEncoder;
-    private final Talon turningEncoder;
+    private final Encoder driveEncoder;
+    private final Encoder turningEncoder;
 
     private final PIDController turningPidController;
 
@@ -47,8 +50,10 @@ public class SwerveModule{
         this.absoluteEncoderReversed = absoluteEncoderReversed;
         absoluteEncoder = new AnalogInput(absoluteEncoderId);
 
-        driveMotor = new Talon(driveMotorId, MotorType.kBrushless);
-        turningMotor = new Talon(turningMotorId, MotorType.kBrushless);
+        driveMotor = new WPI_TalonFX(driveMotorId);
+        driveMotor.setNeutralMode(NeutralMode.Coast);
+        turningMotor = new WPI_TalonFX(turningMotorId);
+        turningMotor.setNeutralMode(NeutralMode.Coast);
 
 
         driveMotor.setInverted(driveMotorReversed);

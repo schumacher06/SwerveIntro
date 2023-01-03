@@ -8,6 +8,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
 
 import com.kauailabs.navx.frc;
+import com.kauailabs.navx.frc.AHRS;
+
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 
 public class SwerveSubsystem extends SubsystemBase{
@@ -49,7 +51,8 @@ public class SwerveSubsystem extends SubsystemBase{
     );
 
     private AHRS gyro = new AHRS(SPI.Port.kMXP); //gyroscope / NAVX
-
+    gyro.calibrate();
+    
     public SwerveSubsystem(){
         new Thread(() -> {
             try {
@@ -80,7 +83,7 @@ public class SwerveSubsystem extends SubsystemBase{
         backRight.stop();
     }
     public void setModuleStates(SwerveModuleState[] desiredStates){
-        SwerveDriveKinematics.normalizeWheelSpeeds(desiredStates, DriveConstants.kPhysicalMaxSpeedMetersPerSecond); //switch out normalize function
+        SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, DriveConstants.kPhysicalMaxSpeedMetersPerSecond); //switch out normalize function
         frontLeft.setDesiredState(desiredStates[0]);
         frontRight.setDesiredState(desiredStates[1]);
         backLeft.setDesiredState(desiredStates[2]);
